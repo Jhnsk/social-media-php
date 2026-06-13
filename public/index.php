@@ -22,45 +22,45 @@ switch($url){
             break;
 
         case 'profile':
-            require '../app/controllers/profileController.php';
+            require '../app/controllers/ProfileController.php';
             break; 
 
         case 'register':
-            require '../app/controllers/registerController.php';
+            require '../app/controllers/RegisterController.php';
             break;
 
         case 'dashboard':
-            require '../app/controllers/dashboardController.php';
+            require '../app/controllers/DashboardController.php';
             break;
 
         case 'login':
-            require '../app/controllers/loginController.php';
+            require '../app/controllers/LoginController.php';
             break;
     
         case 'logout':
-            require '../app/controllers/logoutController.php';
+            require '../app/controllers/LogoutController.php';
             break;
 
         case  'post':
-            require '../app/controllers/postController.php';
+            require '../app/controllers/PostController.php';
             break;
 
         case 'following':
-            require '../app/controllers/followingController.php';
+            require '../app/controllers/FollowingController.php';
             break;
         
         case 'like':
-            require '../app/controllers/likeController.php';
+            require '../app/controllers/LikeController.php';
             break;
 
         case 'comment':
-            require '../app/controllers/commentsController.php';
+            require '../app/controllers/CommentsController.php';
             break;
         case 'messenger':
-            require '../app/controllers/messengerController.php';
+            require '../app/controllers/MessengerController.php';
             break;
         case 'ajax':
-            require '../app/controllers/ajaxController.php';
+            require '../app/controllers/AjaxController.php';
             break;
 
     default:
