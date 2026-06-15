@@ -9,6 +9,8 @@ error_reporting(E_ALL);
 
     require '../vendor/autoload.php';
     use App\Helpers\time;
+    use App\Controllers\RegisterController;
+    use App\Controllers\LoginController;
 
 $url = $_GET['url'] ?? '';
 
@@ -26,17 +28,22 @@ switch($url){
             require '../app/Controllers/ProfileController.php';
             break; 
 
-        case 'register':
-            require '../app/Controllers/RegisterController.php';
-            break;
+    
+            case 'register':
+            
+                $controller = new RegisterController();
+                $controller->store();
+            
+                break;
 
         case 'dashboard':
             require '../app/Controllers/DashboardController.php';
             break;
 
         case 'login':
-            require '../app/Controllers/LoginController.php';
-            break;
+            
+            $login = new LoginController();
+            $login->login();
     
         case 'logout':
             require '../app/Controllers/LogoutController.php';

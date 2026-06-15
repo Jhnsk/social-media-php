@@ -1,51 +1,49 @@
 <?php
 
-    namespace App\Controllers;
+namespace App\Controllers;
 
-    use App\Config\Database;
-    use App\Models\User;
+use App\Config\Database;
+use App\Models\User;
 
-    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-        die('método inválido');
-    }
+class LoginController
+{
+    public function login(): void
+    {
+        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+        $password = $_POST['password'] ?? '';
 
-    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-    $password = $_POST['password'] ?? '';
+        if (!$email || !$password) {
+            $_SESSION['flash'] = 'Preencha os campos corretamente';
 
-    if(!$email || !$password){
-        $_SESSION['flash'] = "Preencha os campos corretamente";
-        header('location: /socialMedia/Public/');
-        exit;
-    }
+            $this->redirect('/socialMedia/Public/');
+        }
 
-    try {
-    
         $db = new Database();
         $pdo = $db->connect();
 
         $user = new User($pdo);
         $result = $user->login($email, $password);
 
-        if($result){
-            session_regenerate_id(true);
+        if (!$result) {
+            $_SESSION['flash'] = 'Usuário ou senha inválidos';
 
-            $_SESSION['user'] = [
-                'id' => $result['id'],
-                'name' => $result['name'],
-                'email' => $result['email']
-            ];
-
-            header('location: /socialMedia/Public/dashboard');
-            exit;
+            $this->redirect('/socialMedia/Public/');
         }
 
-        $_SESSION['flash'] = "Usuário ou senha inválidos";
+        session_regenerate_id(true);
 
-        header('location: /socialMedia/Public/');
-        exit;
+        $_SESSION['user'] = [
+            'id' => $result['id'],
+            'name' => $result['name'],
+            'email' => $result['email']
+        ];
 
-    }catch(PDOException $e){
-
-        die('Erro interno');
-        
+        $this->redirect('/socialMedia/Public/dashboard');
     }
+
+    private function redirect(string $url): void
+    {
+        header("Location: {$url}");
+        exit;
+    }
+}
