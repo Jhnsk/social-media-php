@@ -1,3 +1,4 @@
+<?php use function App\Helpers\getTimePost;?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -7,7 +8,7 @@
     <title>Dashboard</title>
 </head>
 <body>
-    <?php use function App\Helpers\getTimePost;?>
+    
     <aside class="sidebar">
     
 
@@ -56,7 +57,6 @@
                 <div class="post-actions">
 
                     <input type="file" name="image">
-
                     <button type="submit">Publicar</button>
 
                 </div>

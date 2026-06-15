@@ -1,3 +1,4 @@
+<?php use function App\Helpers\getTimePost;?>
 
 <!DOCTYPE html>
 <html lang="pt-br">

@@ -2,8 +2,8 @@
 
     namespace App\Controllers;
 
-    use App\config\Database;
-    use App\models\Like;
+    use App\Config\Database;
+    use App\Models\Like;
 
     if($_SERVER['REQUEST_METHOD'] !== 'POST'){
         die("comando inválido");

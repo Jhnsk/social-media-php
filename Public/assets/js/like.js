@@ -1,35 +1,36 @@
-
 const likeButtons = document.querySelectorAll('.like-btn');
-
 
 likeButtons.forEach((button) => {
 
     button.addEventListener('click', async () => {
 
-        
-        const postId = button.dataset.id;
+        try {
 
-        const response = await fetch('/socialMedia/Public/like', {
+            const postId = button.dataset.id;
 
-            method: 'POST',
+            const response = await fetch('/socialMedia/Public/like', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `post_id=${postId}`
+            });
 
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
+            const data = await response.json();
 
-            body: `post_id=${postId}`
-        });
+            const likesSpan = document.querySelector(`#likes-${postId}`);
 
-        const data = await response.json();
-        
+            if (likesSpan) {
+                likesSpan.innerText = data.likes + ' curtidas';
+            }
 
-        const likesSpan = document.querySelector(`#likes-${postId}`);
+            button.innerText = data.liked
+                ? 'Descurtir'
+                : 'Curtir';
 
-        likesSpan.innerText = data.likes + '  curtidas';
-
-        button.innerText = data.liked ? 'Descurtir' : 'Curtir';
-
-       
+        } catch (error) {
+            console.error('Erro ao curtir:', error);
+        }
 
     });
 
@@ -41,9 +42,13 @@ commentButtons.forEach((button) => {
 
     button.addEventListener('click', () => {
 
-        const modal = button.parentElement.querySelector('.modal-overlay');
+        const modal = button
+            .parentElement
+            .querySelector('.modal-overlay');
 
-        modal.classList.remove('hidden');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
 
     });
 
@@ -55,7 +60,7 @@ modals.forEach((modal) => {
 
     modal.addEventListener('click', (event) => {
 
-        if(event.target === modal){
+        if (event.target === modal) {
             modal.classList.add('hidden');
         }
 
@@ -63,22 +68,25 @@ modals.forEach((modal) => {
 
 });
 
-const CURRENT_USER_ID = document
-    .body
-    .dataset
-    .user;
+const CURRENT_USER_ID = document.body.dataset.user;
 
-async function loadMessages(){
+async function loadMessages() {
 
     const messagesArea = document.querySelector('.messages-area');
 
-    const receiverId = messagesArea.dataset.user;
-
-    if(!receiverId){
+    // Se não estiver na página de mensagens,
+    // simplesmente encerra a função.
+    if (!messagesArea) {
         return;
     }
 
-    try{
+    const receiverId = messagesArea.dataset.user;
+
+    if (!receiverId) {
+        return;
+    }
+
+    try {
 
         const response = await fetch(
             `/socialMedia/Public/ajax?receiver_id=${receiverId}`
@@ -90,39 +98,39 @@ async function loadMessages(){
 
         messages.forEach((message) => {
 
-            const isMyMessage = message.sender_id == CURRENT_USER_ID;
+            const isMyMessage =
+                message.sender_id == CURRENT_USER_ID;
 
             messagesArea.innerHTML += `
-            
                 <div class="message ${
-                    isMyMessage 
-                    ? 'my-message' 
-                    : 'other-message'
+                    isMyMessage
+                        ? 'my-message'
+                        : 'other-message'
                 }">
-
                     <p>${message.message}</p>
-
-                    <span>
-                        ${message.created_at}
-                    </span>
-
+                    <span>${message.created_at}</span>
                 </div>
-            
             `;
+
         });
 
-    }catch(error){
+    } catch (error) {
 
-        console.log(error);
+        console.error('Erro ao carregar mensagens:', error);
 
     }
+
 }
 
-loadMessages();
+// Só inicia o chat se a área de mensagens existir.
+const messagesArea = document.querySelector('.messages-area');
 
-setInterval(() => {
+if (messagesArea) {
 
     loadMessages();
 
-}, 2000);
+    setInterval(() => {
+        loadMessages();
+    }, 2000);
 
+}
