@@ -1,18 +1,21 @@
 <?php
 
-session_start();
+    session_start();
 
-date_default_timezone_set('America/Sao_Paulo');
+    date_default_timezone_set('America/Sao_Paulo');
 
-error_reporting(E_ALL);
+    error_reporting(E_ALL);
     ini_set('display_errors', 1);
 
     require '../vendor/autoload.php';
     use App\Helpers\time;
     use App\Controllers\RegisterController;
     use App\Controllers\LoginController;
+    use App\Controllers\DashboardController;
+    use App\Controllers\PostController;
+    use App\Controllers\LikeController;
 
-$url = $_GET['url'] ?? '';
+    $url = $_GET['url'] ?? '';
 
 switch($url){
 
@@ -37,20 +40,28 @@ switch($url){
                 break;
 
         case 'dashboard':
-            require '../app/Controllers/DashboardController.php';
+            
+            $controller = new DashboardController();
+            $controller->dashboard();
+
             break;
 
         case 'login':
             
             $login = new LoginController();
             $login->login();
+
+            break;
     
         case 'logout':
             require '../app/Controllers/LogoutController.php';
             break;
 
         case  'post':
-            require '../app/Controllers/PostController.php';
+            
+            $post = new PostController();
+            $post->post();
+
             break;
 
         case 'following':
@@ -58,7 +69,10 @@ switch($url){
             break;
         
         case 'like':
-            require '../app/Controllers/LikeController.php';
+            
+            $like = new LikeController();
+            $like->like();
+
             break;
 
         case 'comment':

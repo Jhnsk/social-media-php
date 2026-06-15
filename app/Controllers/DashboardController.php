@@ -1,42 +1,56 @@
 <?php
+
 namespace App\Controllers;
 
+use App\Config\Database;
+use App\Models\Comments; 
+use App\Models\Follow;
+use App\Models\Like;
+use App\Models\Post;
 
-    
-
-    use App\Config\Database;
-    use App\Models\Post;
-    use App\Models\Follow;
-    use App\Models\Like;
-    use App\Models\Comments; 
-    
-    if(!isset($_SESSION['user'])){
-        header('location: /socialMedia/Public/');
-        exit;
-    }    
+class DashboardController
+{
+    public function dashboard(): void
+    {
+        if (!isset($_SESSION['user'])) {
+            $this->redirect('/socialMedia/Public/');
+        }    
 
     $userId = $_SESSION['user']['id'];
     
     $db = new Database();
     $pdo = $db->connect();
 
-    $getPosts = new Post($pdo);
+    $postsModel = new Post($pdo);
 
-    $follow = new Follow($pdo);
+    $followModel = new Follow($pdo);
 
-    $getlikes = new Like($pdo);
+    $likesModel = new Like($pdo);
 
-    $gComments = new Comments($pdo);
+    $commentModel = new Comments($pdo);
 
-    $posts = $getPosts->getPosts($userId);
+    $posts = $postsModel->getPosts($userId);
     
-    $suggestions = $follow->getSuggestions($userId);
+    $suggestions = $followModel->getSuggestions($userId);
 
     foreach($posts as &$post){
-        $post['likesCount'] = $getlikes->getLikesCount($post['id']);
-        $post['hasLiked'] = $getlikes->hasLiked($userId, $post['id']);
-        $post['comments'] = $gComments->getComments($post['id']);
+        $post['likesCount'] = $likesModel->getLikesCount($post['id']);
+        $post['hasLiked'] = $likesModel->hasLiked($userId, $post['id']);
+        $post['comments'] = $commentModel->getComments($post['id']);
     }
 
+    unset($post);
+
     require '../app/Views/dashboard.php';
+
+    }
+
+    private function redirect(string $url): void
+    {
+        header("Location: {$url}");
+        exit;
+    }
+}
+    
+    
     

@@ -9,41 +9,39 @@ class LoginController
 {
     public function login(): void
     {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/socialMedia/Public/');
+        }
+    
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $password = $_POST['password'] ?? '';
-
+    
         if (!$email || !$password) {
-            $_SESSION['flash'] = 'Preencha os campos corretamente';
-
-            $this->redirect('/socialMedia/Public/');
+            $this->backWithMessage('Preencha os campos corretamente');
         }
-
-        $db = new Database();
-        $pdo = $db->connect();
-
-        $user = new User($pdo);
+    
+        $user = new User((new Database())->connect());
+    
         $result = $user->login($email, $password);
-
+    
         if (!$result) {
-            $_SESSION['flash'] = 'Usuário ou senha inválidos';
-
-            $this->redirect('/socialMedia/Public/');
+            $this->backWithMessage('Usuário ou senha inválidos');
         }
-
+    
         session_regenerate_id(true);
-
+    
         $_SESSION['user'] = [
             'id' => $result['id'],
             'name' => $result['name'],
             'email' => $result['email']
         ];
-
+    
         $this->redirect('/socialMedia/Public/dashboard');
     }
 
-    private function redirect(string $url): void
-    {
-        header("Location: {$url}");
-        exit;
-    }
+        private function redirect(string $url): void
+        {
+            header("Location: {$url}");
+            exit;
+        }
 }
