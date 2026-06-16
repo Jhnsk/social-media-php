@@ -8,83 +8,110 @@
     ini_set('display_errors', 1);
 
     require '../vendor/autoload.php';
-    use App\Helpers\time;
-    use App\Controllers\RegisterController;
-    use App\Controllers\LoginController;
+
+    use App\Controllers\AjaxController;
+    use App\Controllers\CommentsController;
     use App\Controllers\DashboardController;
-    use App\Controllers\PostController;
+    use App\Controllers\FollowController;
+    use App\Controllers\LoginController;
     use App\Controllers\LikeController;
+    use App\Controllers\LogoutController;
+    use App\Controllers\MessengerController;
+    use App\Controllers\PostController;
+    use App\Controllers\ProfileController;
+    use App\Controllers\RegisterController;
+    use App\Helpers\time;
 
     $url = $_GET['url'] ?? '';
 
 switch($url){
 
-        case '':
-            require '../app/Views/login.php';
-            break;
+    case '':
+        require '../app/Views/login.php';
+        break;
 
-        case 'signup':
-            require '../app/Views/register.php';
-            break;
+    case 'signup':
+        require '../app/Views/register.php';
+        break;
 
-        case 'profile':
-            require '../app/Controllers/ProfileController.php';
-            break; 
+    case 'profile':
 
-    
-            case 'register':
-            
-                $controller = new RegisterController();
-                $controller->store();
-            
-                break;
+        $controller = new ProfileController();
+        $controller->profile();
 
-        case 'dashboard':
-            
-            $controller = new DashboardController();
-            $controller->dashboard();
+        break; 
 
-            break;
-
-        case 'login':
-            
-            $login = new LoginController();
-            $login->login();
-
-            break;
-    
-        case 'logout':
-            require '../app/Controllers/LogoutController.php';
-            break;
-
-        case  'post':
-            
-            $post = new PostController();
-            $post->post();
-
-            break;
-
-        case 'following':
-            require '../app/Controllers/FollowingController.php';
-            break;
+    case 'register':
         
-        case 'like':
-            
-            $like = new LikeController();
-            $like->like();
+        $controller = new RegisterController();
+        $controller->store();
+    
+        break;
 
-            break;
+    case 'dashboard':
+        
+        $controller = new DashboardController();
+        $controller->dashboard();
 
-        case 'comment':
-            require '../app/Controllers/CommentsController.php';
-            break;
-        case 'messenger':
-            require '../app/Controllers/MessengerController.php';
-            break;
-        case 'ajax':
-            require '../app/Controllers/AjaxController.php';
-            break;
+        break;
+
+    case 'login':
+        
+        $controller = new LoginController();
+        $controller->login();
+
+        break;
+
+    case 'logout':
+        
+        $controller = new LogoutController();
+        $controller->logout();
+
+        break;
+
+    case  'post':
+        
+        $controller = new PostController();
+        $controller->post();
+
+        break;
+
+    case 'follow':
+
+        $controller = new FollowController();
+        $controller->follow();
+
+        break;
+    
+    case 'like':
+        
+        $controller = new LikeController();
+        $controller->like();
+
+        break;
+
+    case 'comment':
+
+        $controller = new CommentsController();
+        $controller->createComment();
+
+        break;
+
+    case 'messenger':
+
+        $controller = new MessengerController();
+        $controller->messenger();
+
+        break;
+
+    case 'ajax':
+
+        $controller = new AjaxController();
+        $controller->ajax();
+
+        break;
 
     default:
-        echo "404";
+        http_response_code(404);
+        echo "Página não encontrada";
 }

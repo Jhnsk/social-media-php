@@ -188,7 +188,7 @@
                 </div>
             </div>
 
-        <br><form class="form" action="/socialMedia/Public/following" method="POST">
+        <br><form class="form" action="/socialMedia/Public/follow" method="POST">
 
         <input 
                 type="hidden" 

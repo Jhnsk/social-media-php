@@ -1,6 +1,7 @@
 <?php
 
     namespace App\Models;
+
     use PDO;
 
     class Follow{
@@ -36,7 +37,7 @@
             return $sql->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        public function following(int $follower, int $following ): bool{
+        public function follow(int $follower, int $following ): bool{
             $sql = $this->pdo->prepare("INSERT INTO followers (follower_id, following_id) VALUES (:follower, :following)");
             $sql->bindValue(':follower', $follower);
             $sql->bindValue(':following', $following);

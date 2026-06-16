@@ -1,39 +1,60 @@
 <?php
 
-     namespace App\Controllers;
+    namespace App\Controllers;
 
     use App\Config\Database;
     use App\Models\Comments;
 
-    $userId = $_SESSION['user']['id'];
-    $postId = filter_input(INPUT_POST, 'post_id', FILTER_VALIDATE_INT);
-    $comment = trim($_POST['comment'] ?? '');
+    class CommentsController
+    {
+        public function createComment(): void
+        {
 
-    if($comment === ''){
-        die("Escreva algo");
-    }
+            if (!isset($_SESSION['user'])) {
+                $this->redirect('/socialMedia/Public/');
+            }
 
-    if(!$postId || $postId <= 0){
-        die("comando inválido");
-    }
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                $this->redirect('/socialMedia/Public/dashboard');
+            }
 
-    try{
+            $userId = $_SESSION['user']['id'];
+            $postId = filter_input(INPUT_POST, 'post_id', FILTER_VALIDATE_INT);
+            $comment = trim($_POST['comment'] ?? '');
 
-        $db = new Database();
-        $pdo = $db->connect();
 
-        $commentObj = new Comments($pdo);
-        $result = $commentObj->create($userId, $postId, $comment);
+            if($comment === ''){
+                $_SESSION['flash'] = 'Escreva um comentário';
+                $this->redirect('/socialMedia/Public/dashboard');
+            }
 
-        if($result){
-            header('location: /socialMedia/Public/dashboard');
-            exit;
-        }else{
-            echo "Algo deu errado, comente novamente";
+            if(!$postId || $postId <= 0){
+                $_SESSION['flash'] = 'Post Inválido';
+                $this->redirect('/socialMedia/Public/dashboard');
+            }
+
+            $db = new Database();
+            $pdo = $db->connect();
+
+            $commentModel = new Comments($pdo);
+            $result = $commentModel->create($userId, $postId, $comment);
+
+            if ($result) {
+                $_SESSION['flash'] = 'Comentário adicionado com sucesso';
+            } else {
+                $_SESSION['flash'] = 'Erro ao adicionar comentário';
+            }
+    
+            $this->redirect('/socialMedia/Public/dashboard');
+
         }
 
-    }catch(PDOException $e){
-
-        die("erro interno");
-        
+        private function redirect(string $url): void
+        {
+        header("Location: {$url}");
+        exit;
+        }
     }
+    
+
+   

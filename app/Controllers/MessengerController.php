@@ -7,66 +7,96 @@ use App\Models\Follow;
 use App\Models\User;
 use App\Models\Messenger;
 
-$userId = $_SESSION['user']['id'];
+class MessengerController
+{
+    public function messenger(): void
+    {
+        if (!isset($_SESSION['user'])) {
+            $this->redirect('/socialMedia/Public/');
+        }
 
-$conversationUser = filter_input(
-    INPUT_GET,
-    'user',
-    FILTER_VALIDATE_INT
-);
+        $userId = $_SESSION['user']['id'];
 
-$selectedUser = null;
+        $pdo = (new Database())->connect();
 
-$db = new Database();
-$pdo = $db->connect();
+        $followingModel = new Follow($pdo);
+        $userModel = new User($pdo);
+        $messengerModel = new Messenger($pdo);
 
-$followingModel = new Follow($pdo);
-$userModel = new User($pdo);
-$messengerModel = new Messenger($pdo);
+        // Processa envio de mensagem
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-$followings = $followingModel->getFollowing($userId);
+            $message = trim($_POST['msgText'] ?? '');
 
-foreach($followings as &$following){
+            $receiverId = filter_input(
+                INPUT_POST,
+                'receiver_id',
+                FILTER_VALIDATE_INT
+            );
 
-    $lastMessage = $messengerModel->getLastMessage(
-        $userId,
-        $following['id']
-    );
+            if (!$receiverId || $receiverId <= 0) {
+                $_SESSION['flash'] = 'Usuário inválido';
+                $this->redirect('/socialMedia/Public/messenger');
+            }
 
-    $following['last_message'] = $lastMessage['message'] ?? 'Nenhuma mensagem';
-}
-unset($following);
+            if ($message === '') {
+                $_SESSION['flash'] = 'Escreva uma mensagem';
+                $this->redirect('/socialMedia/Public/messenger');
+            }
 
-if($conversationUser){
-    $selectedUser = $userModel->selectUserById($conversationUser);
-}
+            $messengerModel->createMsg(
+                $userId,
+                $receiverId,
+                $message
+            );
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $this->redirect(
+                "/socialMedia/Public/messenger?user={$receiverId}"
+            );
+        }
 
-    $message = trim($_POST['msgText'] ?? '');
+        // Carrega a tela
+        $conversationUser = filter_input(
+            INPUT_GET,
+            'user',
+            FILTER_VALIDATE_INT
+        );
 
-    $receiverId = filter_input(
-        INPUT_POST,
-        'receiver_id',
-        FILTER_VALIDATE_INT
-    );
+        $selectedUser = null;
 
-    if($receiverId === false || $receiverId <= 0){
-        die('Usuário inválido');
+        $followings = $followingModel->getFollowing($userId);
+
+        foreach ($followings as &$following) {
+
+            $lastMessage = $messengerModel->getLastMessage(
+                $userId,
+                $following['id']
+            );
+
+            $following['last_message'] =
+                $lastMessage['message'] ?? 'Nenhuma mensagem';
+        }
+
+        unset($following);
+
+        if ($conversationUser) {
+
+            $selectedUser = $userModel->selectUserById(
+                $conversationUser
+            );
+
+            if (!$selectedUser) {
+                $_SESSION['flash'] = 'Usuário não encontrado';
+                $this->redirect('/socialMedia/Public/messenger');
+            }
+        }
+
+        require '../app/Views/messenger.php';
     }
 
-    if($message === ''){
-        die('Digite uma mensagem');
+    private function redirect(string $url): void
+    {
+        header("Location: {$url}");
+        exit;
     }
-
-    $messengerModel->createMsg(
-        $userId,
-        $receiverId,
-        $message
-    );
-
-    header("Location: messenger?user=$receiverId");
-    exit;
 }
-
-require '../app/Views/messenger.php';

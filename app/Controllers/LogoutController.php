@@ -1,23 +1,36 @@
 <?php
 
-namespace App\Controllers;
+    namespace App\Controllers;
 
-$_SESSION = [];
+    class LogoutController
+    {
+        public function logout(): void
+        {
+            $_SESSION = [];
 
-session_destroy();
+            session_destroy();
 
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(
-        session_name(),
-        '',
-        time() - 42000,
-        $params["path"],
-        $params["domain"],
-        $params["secure"],
-        $params["httponly"]
-    );
-}
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(
+                    session_name(),
+                    '',
+                    time() - 42000,
+                    $params["path"],
+                    $params["domain"],
+                    $params["secure"],
+                    $params["httponly"]
+                );
+            }
 
-header('Location: /socialMedia/Public/');
-exit;
+        $this->redirect('/socialMedia/Public/');
+                
+        }
+
+        public function redirect(string $url): void
+        {
+            header("Location: {$url}");
+            exit;
+        }
+    }
+
