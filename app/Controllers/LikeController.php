@@ -2,10 +2,11 @@
 
     namespace App\Controllers;
 
+    use App\Core\Controller;
     use App\Config\Database;
     use App\Models\Like;
 
-    class LikeController
+    class LikeController extends Controller
     {
         public function like(): void
         {
@@ -38,11 +39,6 @@
                 'likes' => $likes
             ]);
 
-            exit;
-        }
-        private function redirect(string $url): void
-        {
-            header("Location: {$url}");
             exit;
         }
     }

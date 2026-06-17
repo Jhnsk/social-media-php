@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Config\Database;
 use App\Models\Messenger;
 
-class AjaxController
+class AjaxController extends Controller
 {
     public function ajax(): void
     {
@@ -48,12 +49,6 @@ class AjaxController
 
         echo json_encode($messages);
 
-        exit;
-    }
-
-    private function redirect(string $url): void
-    {
-        header("Location: {$url}");
         exit;
     }
 }

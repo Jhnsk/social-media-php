@@ -5,7 +5,8 @@ namespace App\Config;
 use PDO;
 use PDOException;
 
-class Database {
+class Database 
+{
 
     private string $host = "localhost";
     private string $db = "login_system";
@@ -16,7 +17,7 @@ class Database {
 
     public function connect(): PDO
     {
-        if($this->pdo === null){
+        if ($this->pdo === null) {
 
             try{
 

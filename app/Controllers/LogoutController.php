@@ -2,7 +2,9 @@
 
     namespace App\Controllers;
 
-    class LogoutController
+    use App\Core\Controller;
+
+    class LogoutController extends Controller
     {
         public function logout(): void
         {
@@ -25,12 +27,6 @@
 
         $this->redirect('/socialMedia/Public/');
                 
-        }
-
-        public function redirect(string $url): void
-        {
-            header("Location: {$url}");
-            exit;
         }
     }
 

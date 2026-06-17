@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Config\Database;
 use App\Models\Post;
 
-class PostController
+class PostController extends Controller
 {
     public function post(): void
     {
@@ -28,21 +29,11 @@ class PostController
         $result = $postModel->create($body, $image, $userId);
 
         if($result){
-            $_SESSION['flash'] = "post adicionado com sucesso";
-            $this->redirect('/socialMedia/Public/dashboard');
-            exit;
+            $this->redirect('/socialMedia/Public/dashboard','post adicionado com sucesso');
         }
 
-        $_SESSION['flash'] = "erro ao publicar";
+        $this->redirect('/socialMedia/Public/dashboard','erro ao publicar');
 
-        $this->redirect('/socialMedia/Public/dashboard');
-        
-    }
-
-    private function redirect(string $url): void
-    {
-        header("Location: {$url}");
-        exit;
     }
 }
     

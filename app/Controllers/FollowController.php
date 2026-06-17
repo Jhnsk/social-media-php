@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Config\Database;
 use App\Models\Follow;
 
-class FollowController
+class FollowController extends Controller
 {
     public function follow(): void
     {
@@ -43,15 +44,5 @@ class FollowController
         }
 
         $this->redirect('/socialMedia/Public/dashboard','Erro ao seguir usuário');
-    }
-
-    private function redirect(string $url, string $message = ''): void
-    {
-        if ($message !== '') {
-            $_SESSION['flash'] = $message;
-        }
-
-        header("Location: {$url}");
-        exit;
     }
 }

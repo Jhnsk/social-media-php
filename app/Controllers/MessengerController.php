@@ -2,12 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Config\Database;
 use App\Models\Follow;
 use App\Models\User;
 use App\Models\Messenger;
 
-class MessengerController
+class MessengerController extends Controller
 {
     public function messenger(): void
     {
@@ -35,13 +36,11 @@ class MessengerController
             );
 
             if (!$receiverId || $receiverId <= 0) {
-                $_SESSION['flash'] = 'Usuário inválido';
-                $this->redirect('/socialMedia/Public/messenger');
+                $this->redirect('/socialMedia/Public/messenger','Usuário inválido');
             }
 
             if ($message === '') {
-                $_SESSION['flash'] = 'Escreva uma mensagem';
-                $this->redirect('/socialMedia/Public/messenger');
+                $this->redirect('/socialMedia/Public/messenger','Escreva uma mensagem');
             }
 
             $messengerModel->createMsg(
@@ -86,17 +85,10 @@ class MessengerController
             );
 
             if (!$selectedUser) {
-                $_SESSION['flash'] = 'Usuário não encontrado';
-                $this->redirect('/socialMedia/Public/messenger');
+                $this->redirect('/socialMedia/Public/messenger','Usuário não encontrado');
             }
         }
 
         require '../app/Views/messenger.php';
-    }
-
-    private function redirect(string $url): void
-    {
-        header("Location: {$url}");
-        exit;
     }
 }

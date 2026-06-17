@@ -2,13 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Config\Database;
 use App\Models\Comments; 
 use App\Models\Follow;
 use App\Models\Like;
 use App\Models\Post;
 
-class DashboardController
+class DashboardController extends Controller
 {
     public function dashboard(): void
     {
@@ -43,12 +44,6 @@ class DashboardController
 
     require '../app/Views/dashboard.php';
 
-    }
-
-    private function redirect(string $url): void
-    {
-        header("Location: {$url}");
-        exit;
     }
 }
     

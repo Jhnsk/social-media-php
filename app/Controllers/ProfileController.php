@@ -2,19 +2,19 @@
 
     namespace App\Controllers;
 
+    use App\Core\Controller;
     use App\Config\Database;
     use App\Models\Post;
     use App\Models\Follow;
     use App\Models\Like;
     use App\Models\Comments;
 
-    class ProfileController
+    class ProfileController extends Controller
     {
         public function profile(): void
         {
             if (!isset($_SESSION['user'])) {
                 $this->redirect(' /socialMedia/Public/');
-                
             }  
 
             $userId = $_SESSION['user']['id'];
@@ -43,11 +43,7 @@
             
             require '../app/Views/profile.php';
         }
-        private function redirect(string $url): void
-        {
-            header("Location: {$url}");
-            exit;
-        }
+        
     }
     
 

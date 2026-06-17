@@ -2,10 +2,11 @@
 
     namespace App\Controllers;
 
+    use App\Core\Controller;
     use App\Config\Database;
     use App\Models\Comments;
 
-    class CommentsController
+    class CommentsController extends Controller
     {
         public function createComment(): void
         {
@@ -23,14 +24,12 @@
             $comment = trim($_POST['comment'] ?? '');
 
 
-            if($comment === ''){
-                $_SESSION['flash'] = 'Escreva um comentário';
-                $this->redirect('/socialMedia/Public/dashboard');
+            if ($comment === '') {
+                $this->redirect('/socialMedia/Public/dashboard','Escreva um comentário');
             }
 
             if(!$postId || $postId <= 0){
-                $_SESSION['flash'] = 'Post Inválido';
-                $this->redirect('/socialMedia/Public/dashboard');
+                $this->redirect('/socialMedia/Public/dashboard','Post Inválido');
             }
 
             $db = new Database();
@@ -40,19 +39,10 @@
             $result = $commentModel->create($userId, $postId, $comment);
 
             if ($result) {
-                $_SESSION['flash'] = 'Comentário adicionado com sucesso';
+                $this->redirect('/socialMedia/Public/dashboard','Comentário adicionado com sucesso');
             } else {
-                $_SESSION['flash'] = 'Erro ao adicionar comentário';
+                $this->redirect('/socialMedia/Public/dashboard','Erro ao adicionar comentário');
             }
-    
-            $this->redirect('/socialMedia/Public/dashboard');
-
-        }
-
-        private function redirect(string $url): void
-        {
-        header("Location: {$url}");
-        exit;
         }
     }
     

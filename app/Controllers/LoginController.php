@@ -4,8 +4,10 @@ namespace App\Controllers;
 
 use App\Config\Database;
 use App\Models\User;
+use App\Core\Controller;
 
-class LoginController
+
+class LoginController extends Controller
 {
     public function login(): void
     {
@@ -17,7 +19,7 @@ class LoginController
         $password = $_POST['password'] ?? '';
     
         if (!$email || !$password) {
-            $this->backWithMessage('Preencha os campos corretamente');
+            $this->redirect('/socialMedia/Public/','Preencha os campos corretamente');
         }
     
         $user = new User((new Database())->connect());
@@ -25,7 +27,7 @@ class LoginController
         $result = $user->login($email, $password);
     
         if (!$result) {
-            $this->backWithMessage('Usuário ou senha inválidos');
+            $this->redirect('/socialMedia/Public/','Úsuario ou Senha Inválidos');
         }
     
         session_regenerate_id(true);
@@ -39,9 +41,4 @@ class LoginController
         $this->redirect('/socialMedia/Public/dashboard');
     }
 
-        private function redirect(string $url): void
-        {
-            header("Location: {$url}");
-            exit;
-        }
 }

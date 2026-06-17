@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Core\Controller;
 use App\Config\Database;
 use App\Models\User;
 
-class RegisterController
+class RegisterController extends Controller
 {
     public function store(): void
     {
@@ -14,11 +15,11 @@ class RegisterController
         $password = $_POST['password'] ?? '';
 
         if (!$name || !$email || !$password) {
-            $this->redirectWithMessage('Preencha todos os campos corretamente');
+            $this->redirect('/socialMedia/Public/signup','Preencha os Campos Corretamente');
         }
 
         if (strlen($password) < 6) {
-            $this->redirectWithMessage('A senha deve ter no mínimo 6 caracteres');
+            $this->redirect('/socialMedia/Public/signup','Senha tem que ter no minimo 6 caracteres');
         }
 
         $db = new Database();
@@ -27,17 +28,10 @@ class RegisterController
         $user = new User($pdo);
 
         if (!$user->register($name, $email, $password)) {
-            $this->redirectWithMessage('Email já cadastrado');
+           $this->redirect('/socialMedia/Public/signup','Email já cadastrado');
         }
 
-        $this->redirectWithMessage('Usuário cadastrado com sucesso');
+        $this->redirect('/socialMedia/Public/');
     }
 
-    private function redirectWithMessage(string $message): void
-    {
-        $_SESSION['flash'] = $message;
-
-        header('Location: /socialMedia/Public/signup');
-        exit;
-    }
 }
