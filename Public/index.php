@@ -1,14 +1,5 @@
 <?php
 
-    session_start();
-
-    date_default_timezone_set('America/Sao_Paulo');
-
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-
-    require '../vendor/autoload.php';
-
     use App\Controllers\AjaxController;
     use App\Controllers\CommentsController;
     use App\Controllers\DashboardController;
@@ -22,96 +13,108 @@
     use App\Controllers\RegisterController;
     use App\Helpers\time;
 
+    session_start();
+
+    date_default_timezone_set('America/Sao_Paulo');
+
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+
+    require '../vendor/autoload.php';
+
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
+
     $url = $_GET['url'] ?? '';
 
-switch($url){
+    switch($url){
 
-    case '':
-        require '../app/Views/login.php';
-        break;
+        case '':
+            require '../app/Views/login.php';
+            break;
 
-    case 'signup':
-        require '../app/Views/register.php';
-        break;
+        case 'signup':
+            require '../app/Views/register.php';
+            break;
 
-    case 'profile':
+        case 'profile':
 
-        $controller = new ProfileController();
-        $controller->profile();
+            $controller = new ProfileController();
+            $controller->profile();
 
-        break; 
+            break; 
 
-    case 'register':
+        case 'register':
+            
+            $controller = new RegisterController();
+            $controller->store();
         
-        $controller = new RegisterController();
-        $controller->store();
-    
-        break;
+            break;
 
-    case 'dashboard':
+        case 'dashboard':
+            
+            $controller = new DashboardController();
+            $controller->dashboard();
+
+            break;
+
+        case 'login':
+            
+            $controller = new LoginController();
+            $controller->login();
+
+            break;
+
+        case 'logout':
+            
+            $controller = new LogoutController();
+            $controller->logout();
+
+            break;
+
+        case  'post':
+            
+            $controller = new PostController();
+            $controller->post();
+
+            break;
+
+        case 'follow':
+
+            $controller = new FollowController();
+            $controller->follow();
+
+            break;
         
-        $controller = new DashboardController();
-        $controller->dashboard();
+        case 'like':
+            
+            $controller = new LikeController();
+            $controller->like();
 
-        break;
+            break;
 
-    case 'login':
-        
-        $controller = new LoginController();
-        $controller->login();
+        case 'comment':
 
-        break;
+            $controller = new CommentsController();
+            $controller->createComment();
 
-    case 'logout':
-        
-        $controller = new LogoutController();
-        $controller->logout();
+            break;
 
-        break;
+        case 'messenger':
 
-    case  'post':
-        
-        $controller = new PostController();
-        $controller->post();
+            $controller = new MessengerController();
+            $controller->messenger();
 
-        break;
+            break;
 
-    case 'follow':
+        case 'ajax':
 
-        $controller = new FollowController();
-        $controller->follow();
+            $controller = new AjaxController();
+            $controller->ajax();
 
-        break;
-    
-    case 'like':
-        
-        $controller = new LikeController();
-        $controller->like();
+            break;
 
-        break;
-
-    case 'comment':
-
-        $controller = new CommentsController();
-        $controller->createComment();
-
-        break;
-
-    case 'messenger':
-
-        $controller = new MessengerController();
-        $controller->messenger();
-
-        break;
-
-    case 'ajax':
-
-        $controller = new AjaxController();
-        $controller->ajax();
-
-        break;
-
-    default:
-        http_response_code(404);
-        echo "Página não encontrada";
-}
+        default:
+            http_response_code(404);
+            echo "Página não encontrada";
+    }
