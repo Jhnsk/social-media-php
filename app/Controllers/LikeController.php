@@ -3,8 +3,6 @@
     namespace App\Controllers;
 
     use App\Core\Controller;
-    use App\Config\Database;
-    use App\Models\Like;
 
     class LikeController extends Controller
     {
@@ -25,9 +23,7 @@
                 $this->redirect('/socialMedia/Public/dashboard');
             }
 
-            $pdo = (new Database())->connect();
-
-            $likeModel = new Like($pdo);
+            $likeModel = $this->container()->like();
 
             $liked = $likeModel->toggleLike($userId, $postId);
             $likes = $likeModel->getLikesCount($postId);

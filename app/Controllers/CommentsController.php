@@ -3,8 +3,6 @@
     namespace App\Controllers;
 
     use App\Core\Controller;
-    use App\Config\Database;
-    use App\Models\Comments;
 
     class CommentsController extends Controller
     {
@@ -32,10 +30,7 @@
                 $this->redirect('/socialMedia/Public/dashboard','Post Inválido');
             }
 
-            $db = new Database();
-            $pdo = $db->connect();
-
-            $commentModel = new Comments($pdo);
+            $commentModel = $this->container()->comment();
             $result = $commentModel->create($userId, $postId, $comment);
 
             if ($result) {

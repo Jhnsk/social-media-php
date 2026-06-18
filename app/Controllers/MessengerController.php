@@ -3,10 +3,6 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Config\Database;
-use App\Models\Follow;
-use App\Models\User;
-use App\Models\Messenger;
 
 class MessengerController extends Controller
 {
@@ -18,11 +14,9 @@ class MessengerController extends Controller
 
         $userId = $_SESSION['user']['id'];
 
-        $pdo = (new Database())->connect();
-
-        $followingModel = new Follow($pdo);
-        $userModel = new User($pdo);
-        $messengerModel = new Messenger($pdo);
+        $followingModel = $this->container()->follow();
+        $userModel = $this->container()->user();
+        $messengerModel = $this->container()->messenger();
 
         // Processa envio de mensagem
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

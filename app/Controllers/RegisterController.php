@@ -3,8 +3,6 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Config\Database;
-use App\Models\User;
 
 class RegisterController extends Controller
 {
@@ -22,10 +20,7 @@ class RegisterController extends Controller
             $this->redirect('/socialMedia/Public/signup','Senha tem que ter no minimo 6 caracteres');
         }
 
-        $db = new Database();
-        $pdo = $db->connect();
-
-        $user = new User($pdo);
+        $user = $this->container()->user();
 
         if (!$user->register($name, $email, $password)) {
            $this->redirect('/socialMedia/Public/signup','Email já cadastrado');

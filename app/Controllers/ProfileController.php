@@ -3,12 +3,7 @@
     namespace App\Controllers;
 
     use App\Core\Controller;
-    use App\Config\Database;
-    use App\Models\Post;
-    use App\Models\Follow;
-    use App\Models\Like;
-    use App\Models\Comments;
-
+    
     class ProfileController extends Controller
     {
         public function profile(): void
@@ -19,13 +14,10 @@
 
             $userId = $_SESSION['user']['id'];
 
-            $db = new Database();
-            $pdo = $db->connect();
-
-            $postsUserModel = new Post($pdo);
-            $followerModel = new Follow($pdo);
-            $getlikes = new Like($pdo);
-            $commentModel = new Comments($pdo);
+            $postsUserModel = $this->container()->post();
+            $followerModel = $this->container()->follow();
+            $getlikes = $this->container()->like();
+            $commentModel = $this->container()->comment();
 
             $postsUser = $postsUserModel->getUserPosts($userId);
             $followers = array_slice($followerModel->getFollowers($userId), 0, 5);

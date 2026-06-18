@@ -12,4 +12,9 @@
             header("Location: {$url}");
             exit;
         }
+
+        protected function container(): Container
+        {
+            return new Container();
+        }
     }

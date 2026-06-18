@@ -3,8 +3,6 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Config\Database;
-use App\Models\Post;
 
 class PostController extends Controller
 {
@@ -22,10 +20,7 @@ class PostController extends Controller
         $image = $_FILES['image'] ?? null;
         $userId = $_SESSION['user']['id'];
 
-        $db = new Database();
-        $pdo = $db->connect();
-
-        $postModel = new Post($pdo);
+        $postModel = $this->container()->post();
         $result = $postModel->create($body, $image, $userId);
 
         if($result){
