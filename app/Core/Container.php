@@ -9,6 +9,7 @@
     use App\Models\Like;
     use App\Models\Post;
     use App\Models\Messenger;
+    use App\Repositories\UserRepository;
 
     use PDO;
 
@@ -23,6 +24,11 @@
             }
 
             return $this->pdo;
+        }
+
+        public function userRepository(): userRepository
+        {
+            return new UserRepository($this->pdo);
         }
 
         public function user(): User 
