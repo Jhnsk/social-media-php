@@ -26,10 +26,7 @@
             return $this->pdo;
         }
 
-        public function userRepository(): userRepository
-        {
-            return new UserRepository($this->pdo);
-        }
+        
 
         public function user(): User 
         {
