@@ -8,6 +8,10 @@ class RegisterController extends Controller
 {
     public function store(): void
     {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/socialMedia/Public/');
+        }
+        
         $name = trim($_POST['name'] ?? '');
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $password = $_POST['password'] ?? '';

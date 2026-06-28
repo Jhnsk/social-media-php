@@ -11,30 +11,28 @@
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 $this->redirect('/socialMedia/Public/');
             }
-        
+
             $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
             $password = $_POST['password'] ?? '';
-        
-            if (!$email || !$password) {
-                $this->redirect('/socialMedia/Public/','Preencha os campos corretamente');
+
+            try {
+
+                $userService = $this->container()->userService();
+                $user = $userService->checkLogin($email, $password);
+
+                session_regenerate_id(true);
+
+                $_SESSION['user'] = $user;
+
+                $this->redirect('/socialMedia/Public/dashboard');
+
+            } catch (\Exception $e) {
+
+                $this->redirect(
+                    '/socialMedia/Public/',
+                    $e->getMessage()
+                );
             }
-        
-            $user = $this->container()->user();
-            $result = $user->login($email, $password);
-        
-            if (!$result) {
-                $this->redirect('/socialMedia/Public/','Úsuario ou Senha Inválidos');
-            }
-        
-            session_regenerate_id(true);
-        
-            $_SESSION['user'] = [
-                'id' => $result['id'],
-                'name' => $result['name'],
-                'email' => $result['email']
-            ];
-        
-            $this->redirect('/socialMedia/Public/dashboard');
         }
 
     }

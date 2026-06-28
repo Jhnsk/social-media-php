@@ -20,22 +20,6 @@
         }
 
 
-       
-
-        public function login(string $email,string $password): array|bool{
-           
-            $user = $this->findByEmail($email);
-
-            if($user && password_verify($password, $user['password'])){
-                return [
-                    'id' => $user['id'],
-                    'name' => $user['name'],
-                    'email' => $user['email']
-                ];
-            }
-
-            return false;
-        }
 
         public function selectUserById(int $id): array{
             $sql = $this->pdo->prepare("SELECT * FROM users WHERE id = :id");
