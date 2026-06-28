@@ -10,7 +10,7 @@
     use App\Models\Post;
     use App\Models\Messenger;
     use App\Repositories\UserRepository;
-    use App\Services\userService;
+    use App\Services\UserService;
     
 
     use PDO;

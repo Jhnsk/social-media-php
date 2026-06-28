@@ -12,21 +12,25 @@ class RegisterController extends Controller
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $password = $_POST['password'] ?? '';
 
-        if (!$name || !$email || !$password) {
-            $this->redirect('/socialMedia/Public/signup','Preencha os Campos Corretamente');
-        }
+        try{
+             $userService = $this->container()->userService();
 
-        if (strlen($password) < 6) {
-            $this->redirect('/socialMedia/Public/signup','Senha tem que ter no minimo 6 caracteres');
-        }
-
-        $user = $this->container()->user();
-
-        if (!$user->register($name, $email, $password)) {
-           $this->redirect('/socialMedia/Public/signup','Email já cadastrado');
+        if (!$userService->register($name, $email, $password)) {
+           $this->redirect('/socialMedia/Public/signup');
         }
 
         $this->redirect('/socialMedia/Public/');
+        
+        } catch (\Exception $e) {
+
+            $this->redirect(
+                '/socialMedia/Public/signup',
+                $e->getMessage()
+            );
+
+        }
+       
+       
     }
 
 }

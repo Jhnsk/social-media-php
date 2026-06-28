@@ -20,22 +20,7 @@
         }
 
 
-        public function register(string $name,string $email,string $password): bool{
-
-                if($this->findByEmail($email)){
-                    return false;
-                }
-
-                $hash = password_hash($password, PASSWORD_DEFAULT);
-
-                $sql = $this->pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-                $sql->bindValue(':name', $name);
-                $sql->bindValue(':email', $email);
-                $sql->bindValue(':password', $hash);
-
-                return $sql->execute();
-            
-        }
+       
 
         public function login(string $email,string $password): array|bool{
            
