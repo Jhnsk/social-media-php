@@ -10,7 +10,9 @@
     use App\Models\Post;
     use App\Models\Messenger;
     use App\Repositories\UserRepository;
+    use App\Repositories\PostRepository;
     use App\Services\UserService;
+    use App\Services\PostService;
     
 
     use PDO;
@@ -36,9 +38,17 @@
 
         public function userService(): UserService
         {
-            return new UserService(
-                $this->userRepository()
-            );
+            return new UserService($this->userRepository());
+        }
+
+        public function postRepository(): PostRepository
+        {
+            return new PostRepository($this->pdo());
+        }
+
+        public function postService(): PostService
+        {
+            return new PostService($this->postRepository());
         }
 
 

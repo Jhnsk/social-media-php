@@ -20,8 +20,8 @@ class PostController extends Controller
         $image = $_FILES['image'] ?? null;
         $userId = $_SESSION['user']['id'];
 
-        $postModel = $this->container()->post();
-        $result = $postModel->create($body, $image, $userId);
+        $postService = $this->container()->postService();
+        $result = $postService->create($body, $image, $userId);
 
         if($result){
             $this->redirect('/socialMedia/Public/dashboard','post adicionado com sucesso');

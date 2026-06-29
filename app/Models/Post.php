@@ -3,107 +3,63 @@
     namespace App\Models;
     use PDO;
 
-class Post{
+    class Post{
 
-    private PDO $pdo;
+        private PDO $pdo;
 
-    public function __construct(PDO $pdo){
-        $this->pdo = $pdo;
-    }
-
-    public function create(string $body, array $image, int $userId): bool{
-
-        if(!$body && $image['error'] !== UPLOAD_ERR_OK){
-            return false;
+        public function __construct(PDO $pdo){
+            $this->pdo = $pdo;
         }
 
-        $imageName = null;
+        
 
-        if($image['error'] === UPLOAD_ERR_OK){
+        public function getPosts(int $userId): array {
 
-            $extension = strtolower(
-                pathinfo(
-                    $image['name'],
-                    PATHINFO_EXTENSION
+            $sql = $this->pdo->prepare("
+            SELECT 
+                    posts.*,
+                    users.name,
+                    users.email
+
+                FROM posts
+
+                INNER JOIN users
+                    ON posts.user_id = users.id
+
+                WHERE posts.user_id = :userId
+
+                OR posts.user_id IN (
+
+                    SELECT following_id
+                    FROM followers
+                    WHERE follower_id = :userId
+
                 )
-            );
 
-            $allowed = ['jpg', 'jpeg', 'png'];
-
-            if(!in_array($extension, $allowed)){
-                return false;
-            }
-
-            $imageName = bin2hex(random_bytes(16)) . '.' . $extension;
-
-            move_uploaded_file(
-                $image['tmp_name'],
-                __DIR__ . '/../../Public/media/uploads/' . $imageName
-            );
-
+                ORDER BY posts.created_at DESC
+            ");
+        
+            $sql->bindValue(':userId', $userId);
+        
+            $sql->execute();
+        
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        $sql = $this->pdo->prepare("
-            INSERT INTO posts (body, image, user_id)
-            VALUES (:body, :image, :user_id)
-        ");
+        public function getUserPosts(int $userId): array{
 
-        $sql->bindValue(':body', $body);
-
-        $sql->bindValue(':image', $imageName);
-
-        $sql->bindValue(':user_id', $userId);
-
-        return $sql->execute();
-    }
-
-    public function getPosts(int $userId): array {
-
-        $sql = $this->pdo->prepare("
-           SELECT 
-                posts.*,
-                users.name,
-                users.email
-
-            FROM posts
-
-            INNER JOIN users
-                ON posts.user_id = users.id
-
-            WHERE posts.user_id = :userId
-
-            OR posts.user_id IN (
-
-                SELECT following_id
-                FROM followers
-                WHERE follower_id = :userId
-
-            )
-
-            ORDER BY posts.created_at DESC
-        ");
-    
-        $sql->bindValue(':userId', $userId);
-    
-        $sql->execute();
-    
-        return $sql->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getUserPosts(int $userId): array{
-
-        $sql = $this->pdo->prepare("
+            $sql = $this->pdo->prepare("
+            
+                SELECT *
+                FROM posts
+                WHERE user_id = :user_id
+                ORDER BY created_at DESC
+            
+            ");
         
-            SELECT *
-            FROM posts
-            WHERE user_id = :user_id
-            ORDER BY created_at DESC
+            $sql->bindValue(':user_id', $userId);
+            $sql->execute();
         
-        ");
-    
-        $sql->bindValue(':user_id', $userId);
-        $sql->execute();
-    
-        return $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+        }
     }
-}
