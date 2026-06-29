@@ -11,8 +11,10 @@
     use App\Models\Messenger;
     use App\Repositories\UserRepository;
     use App\Repositories\PostRepository;
+    use App\Repositories\FollowRepository;
     use App\Services\UserService;
     use App\Services\PostService;
+    use App\Services\FollowService;
     
 
     use PDO;
@@ -49,6 +51,16 @@
         public function postService(): PostService
         {
             return new PostService($this->postRepository());
+        }
+
+        public function followRepository(): FollowRepository 
+        {
+            return new FollowRepository($this->pdo());
+        }
+
+        public function followService(): FollowService 
+        {
+            return new FollowService($this->followRepository());
         }
 
 

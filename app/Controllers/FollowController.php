@@ -28,12 +28,9 @@
                 $this->redirect('/socialMedia/Public/dashboard','Usuário inválido');
             }
 
-            $followModel = $this->container()->follow();
+            $followService = $this->container()->followService();
 
-            $result = $followModel->follow(
-                $followerId,
-                $followingId
-            );
+            $result = $followService->follow($followerId, $followingId);
 
             if ($result) {
                 $this->redirect('/socialMedia/Public/dashboard','Usuário seguido com sucesso');
