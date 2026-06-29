@@ -12,29 +12,29 @@
                 $this->redirect('/socialMedia/Public/');
             }    
 
-            $userId = $_SESSION['user']['id'];
-            
-            $postsModel = $this->container()->post();
+        $userId = $_SESSION['user']['id'];
+        
+        $postsModel = $this->container()->post();
 
-            $followModel = $this->container()->follow();
+        $followModel = $this->container()->follow();
 
-            $likesModel = $this->container()->like();
+        $likesModel = $this->container()->like();
 
-            $commentModel = $this->container()->comment();
+        $commentModel = $this->container()->comment();
 
-            $posts = $postsModel->getPosts($userId);
-            
-            $suggestions = $followModel->getSuggestions($userId);
+        $posts = $postsModel->getPosts($userId);
+        
+        $suggestions = $followModel->getSuggestions($userId);
 
-            foreach ($posts as &$post) {
-                $post['likesCount'] = $likesModel->getLikesCount($post['id']);
-                $post['hasLiked'] = $likesModel->hasLiked($userId, $post['id']);
-                $post['comments'] = $commentModel->getComments($post['id']);
-            }
+        foreach ($posts as &$post) {
+            $post['likesCount'] = $likesModel->getLikesCount($post['id']);
+            $post['hasLiked'] = $likesModel->hasLiked($userId, $post['id']);
+            $post['comments'] = $commentModel->getComments($post['id']);
+        }
 
-            unset($post);
+        unset($post);
 
-            require '../app/Views/dashboard.php';
+        require '../app/Views/dashboard.php';
 
         }
     }

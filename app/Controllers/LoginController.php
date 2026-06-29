@@ -18,6 +18,7 @@
             try {
 
                 $userService = $this->container()->userService();
+                
                 $user = $userService->checkLogin($email, $password);
 
                 session_regenerate_id(true);

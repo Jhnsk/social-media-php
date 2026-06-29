@@ -40,7 +40,7 @@
             $user = $this->userRepository->findByEmail($email);
 
             if (!$user || !password_verify($password, $user['password'])) {
-                throw new \Exception("Usuário ou senha Inválido");
+                throw new \Exception("Usuário ou senha inválidos");
             }
 
             return [

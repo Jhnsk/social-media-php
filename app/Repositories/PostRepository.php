@@ -21,4 +21,37 @@ class PostRepository
 
         return $sql->execute();
     }
+
+    public function getPosts(int $userId): array {
+
+        $sql = $this->pdo->prepare("
+        SELECT 
+                posts.*,
+                users.name,
+                users.email
+
+            FROM posts
+
+            INNER JOIN users
+                ON posts.user_id = users.id
+
+            WHERE posts.user_id = :userId
+
+            OR posts.user_id IN (
+
+                SELECT following_id
+                FROM followers
+                WHERE follower_id = :userId
+
+            )
+
+            ORDER BY posts.created_at DESC
+        ");
+    
+        $sql->bindValue(':userId', $userId);
+    
+        $sql->execute();
+    
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
