@@ -18,7 +18,7 @@
 
         $followModel = $this->container()->follow();
 
-        $likesModel = $this->container()->like();
+        $likesService = $this->container()->likeService();
 
         $commentModel = $this->container()->comment();
 
@@ -27,8 +27,8 @@
         $suggestions = $followModel->getSuggestions($userId);
 
         foreach ($posts as &$post) {
-            $post['likesCount'] = $likesModel->getLikesCount($post['id']);
-            $post['hasLiked'] = $likesModel->hasLiked($userId, $post['id']);
+            $post['likesCount'] = $likesService->getLikes($post['id']);
+            $post['hasLiked'] = $likesService->hasLiked($userId, $post['id']);
             $post['comments'] = $commentModel->getComments($post['id']);
         }
 

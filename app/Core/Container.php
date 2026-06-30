@@ -12,9 +12,11 @@
     use App\Repositories\UserRepository;
     use App\Repositories\PostRepository;
     use App\Repositories\FollowRepository;
+    use App\Repositories\LikeRepository;
     use App\Services\UserService;
     use App\Services\PostService;
     use App\Services\FollowService;
+    use App\Services\LikeService;
     
 
     use PDO;
@@ -61,6 +63,16 @@
         public function followService(): FollowService 
         {
             return new FollowService($this->followRepository());
+        }
+
+        public function likeRepository(): LikeRepository 
+        {
+            return new LikeRepository($this->pdo());
+        }
+
+        public function likeService(): LikeService 
+        {
+            return new LikeService($this->likeRepository());
         }
 
 

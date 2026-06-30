@@ -23,10 +23,10 @@
                 $this->redirect('/socialMedia/Public/dashboard');
             }
 
-            $likeModel = $this->container()->like();
+            $likeService = $this->container()->likeService();
 
-            $liked = $likeModel->toggleLike($userId, $postId);
-            $likes = $likeModel->getLikesCount($postId);
+            $liked = $likeService->toggleLike($userId, $postId);
+            $likes = $likeService->getLikes($postId);
 
             header('Content-Type: application/json');
 

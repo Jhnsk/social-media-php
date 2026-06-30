@@ -1,27 +1,23 @@
 <?php
 
-    namespace App\Models;
+    namespace App\Repositories;
+
     use PDO;
 
-    class Like{
+    class LikeRepository 
+    {
+        public function __construct(private PDO $pdo){}
 
-        private PDO $pdo;
-
-        public function __construct(PDO $pdo){
-            $this->pdo = $pdo;
-        }
-
-        public function toggleLike(int $userId,int $postId): bool
+        public function toggle(int $userId, int $postId): bool 
         {
+            $sql = $this->pdo->prepare("SELECT id FROM likes WHERE user_id = :user_id AND post_id = :post_id");
+            $sql->bindValue(':user_id', $userId);
+            $sql->bindValue(':post_id', $postId);
+            $sql->execute();
 
-                $sql = $this->pdo->prepare("SELECT id FROM likes WHERE user_id = :user_id AND post_id = :post_id");
-                $sql->bindValue(':user_id', $userId);
-                $sql->bindValue(':post_id', $postId);
-                $sql->execute();
-
-                $like = $sql->fetch();
+            $like = $sql->fetch();
   
-            if($like){
+            if ($like) {
   
                 $delete = $this->pdo->prepare("DELETE FROM likes WHERE user_id = :user_id AND post_id = :post_id");
                 $delete->bindValue(':user_id', $userId);
@@ -37,11 +33,10 @@
                 $insert->execute();
     
                 return true;
-          }
+        }
 
         public function getLikesCount(int $postId): int
         {
-
             $sql = $this->pdo->prepare("SELECT COUNT(*) as total FROM likes WHERE post_id = :post_id");
             $sql->bindValue(':post_id', $postId);
             $sql->execute();
@@ -51,7 +46,7 @@
             return $result['total'];
         }
 
-        public function hasLiked(int $userId, int $postId): bool{
+        public function hasLik(int $userId, int $postId): bool{
 
             $sql = $this->pdo->prepare("
                 SELECT id 
