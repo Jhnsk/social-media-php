@@ -21,23 +21,25 @@
             $postId = filter_input(INPUT_POST, 'post_id', FILTER_VALIDATE_INT);
             $comment = trim($_POST['comment'] ?? '');
 
+            try
+            {
+                $commentService = $this->container()->commentService();
+                $result = $commentService->create($userId, $postId, $comment);
 
-            if ($comment === '') {
-                $this->redirect('/socialMedia/Public/dashboard','Escreva um comentário');
+                if (!$result) {
+                    throw new \Exception('Erro ao adicionar comentário');
+                }
+            
+                $this->redirect(
+                    '/socialMedia/Public/dashboard',
+                    'Comentário adicionado com sucesso'
+                );
+
+            } catch(\Exception $e) {
+                $this->redirect("/socialMedia/Public/dashboard",
+                $e->getMessage());
             }
 
-            if(!$postId || $postId <= 0){
-                $this->redirect('/socialMedia/Public/dashboard','Post Inválido');
-            }
-
-            $commentModel = $this->container()->comment();
-            $result = $commentModel->create($userId, $postId, $comment);
-
-            if ($result) {
-                $this->redirect('/socialMedia/Public/dashboard','Comentário adicionado com sucesso');
-            } else {
-                $this->redirect('/socialMedia/Public/dashboard','Erro ao adicionar comentário');
-            }
         }
     }
     

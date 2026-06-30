@@ -20,7 +20,7 @@
 
         $likesService = $this->container()->likeService();
 
-        $commentModel = $this->container()->comment();
+        $commentService = $this->container()->commentService();
 
         $posts = $postsModel->getPosts($userId);
         
@@ -29,7 +29,7 @@
         foreach ($posts as &$post) {
             $post['likesCount'] = $likesService->getLikes($post['id']);
             $post['hasLiked'] = $likesService->hasLiked($userId, $post['id']);
-            $post['comments'] = $commentModel->getComments($post['id']);
+            $post['comments'] = $commentService->getComments($post['id']);
         }
 
         unset($post);

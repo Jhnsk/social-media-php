@@ -46,7 +46,7 @@
             return $result['total'];
         }
 
-        public function hasLik(int $userId, int $postId): bool{
+        public function hasLiked(int $userId, int $postId): bool{
 
             $sql = $this->pdo->prepare("
                 SELECT id 

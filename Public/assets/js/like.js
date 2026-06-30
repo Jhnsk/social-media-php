@@ -4,7 +4,8 @@ likeButtons.forEach((button) => {
 
     button.addEventListener('click', async () => {
 
-        try {
+        try 
+        {
 
             const postId = button.dataset.id;
 
@@ -14,6 +15,7 @@ likeButtons.forEach((button) => {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: `post_id=${postId}`
+
             });
 
             const data = await response.json();
@@ -86,7 +88,8 @@ async function loadMessages() {
         return;
     }
 
-    try {
+    try 
+    {
 
         const response = await fetch(
             `/socialMedia/Public/ajax?receiver_id=${receiverId}`
@@ -125,12 +128,12 @@ async function loadMessages() {
 // Só inicia o chat se a área de mensagens existir.
 const messagesArea = document.querySelector('.messages-area');
 
-if (messagesArea) {
+    if (messagesArea) {
 
-    loadMessages();
-
-    setInterval(() => {
         loadMessages();
-    }, 2000);
 
-}
+        setInterval(() => {
+            loadMessages();
+        }, 2000);
+
+    }

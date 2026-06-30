@@ -13,10 +13,12 @@
     use App\Repositories\PostRepository;
     use App\Repositories\FollowRepository;
     use App\Repositories\LikeRepository;
+    use App\Repositories\CommentRepository;
     use App\Services\UserService;
     use App\Services\PostService;
     use App\Services\FollowService;
     use App\Services\LikeService;
+    use App\Services\CommentService;
     
 
     use PDO;
@@ -73,6 +75,16 @@
         public function likeService(): LikeService 
         {
             return new LikeService($this->likeRepository());
+        }
+
+        public function commentRepository(): CommentRepository 
+        {
+            return new CommentRepository($this->pdo());
+        }
+
+        public function commentService(): CommentService 
+        {
+            return new CommentService($this->commentRepository());
         }
 
 

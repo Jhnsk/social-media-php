@@ -22,7 +22,7 @@
 
         public function hasLiked(int $userId, int $postId)
         {
-            $hasLiked = $this->likeRepository->hasLik($userId, $postId);
+            $hasLiked = $this->likeRepository->hasLiked($userId, $postId);
             return $hasLiked;
         }
     }
