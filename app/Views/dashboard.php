@@ -29,7 +29,7 @@
             </div>
 
             <div class="profile">
-                <img src="https://placehold.co/120" alt="Foto de perfil">
+                <img src="https://i.pravatar.cc/300" alt="Foto de perfil">
 
                 <h2><?=$_SESSION['user']['name']?></h2>
                 <p><?=$_SESSION['user']['email']?></p>
@@ -76,7 +76,7 @@
 
             <div class="post-header">
 
-                <img src="https://placehold.co/60" alt="Usuário">
+                <img src="https://i.pravatar.cc/300" alt="Usuário">
 
                 <div class="post-user">
                     <h3><?= $siglePost['name']?></h3>

@@ -129,7 +129,7 @@
 
                 <div class="post-header">
 
-                    <img src="https://placehold.co/60" alt="Usuário">
+                    <img src="https://i.pravatar.cc/300" alt="Usuário">
 
                     <div class="post-user">
                         <h3><?= $_SESSION['user']['name']?></h3>
