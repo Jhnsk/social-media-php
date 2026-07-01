@@ -30,6 +30,20 @@
             $sql->bindValue(':password', $password);
 
             return $sql->execute();
-    }
+        }
 
-}
+        public function selectUserById(int $id): array
+        {
+            $sql = $this->pdo->prepare("SELECT * FROM users WHERE id = :id");
+            $sql->bindValue(':id', $id);
+            $sql->execute();
+
+            $result = $sql->fetch(PDO::FETCH_ASSOC);
+
+            return  [
+                'id'=> $result['id'],
+                'name' => $result['name']
+            ];
+        }
+
+    }

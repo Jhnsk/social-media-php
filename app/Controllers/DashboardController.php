@@ -14,17 +14,17 @@
 
         $userId = $_SESSION['user']['id'];
         
-        $postsModel = $this->container()->post();
+        $postService = $this->container()->postService();
 
-        $followModel = $this->container()->follow();
+        $followService = $this->container()->followService();
 
         $likesService = $this->container()->likeService();
 
         $commentService = $this->container()->commentService();
 
-        $posts = $postsModel->getPosts($userId);
+        $posts = $postService->getPosts($userId);
         
-        $suggestions = $followModel->getSuggestions($userId);
+        $suggestions = $followService->getSuggestions($userId);
 
         foreach ($posts as &$post) {
             $post['likesCount'] = $likesService->getLikes($post['id']);

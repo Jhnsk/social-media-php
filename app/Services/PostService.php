@@ -57,4 +57,16 @@ class PostService
             $userId
         );
     }
+
+    public function getPosts(int $userId): array
+    {
+        $result = $this->postRepository->getPosts($userId);
+        return $result;
+    }
+
+    public function getUserPosts(int $userId): array
+    {
+        $result = $this->postRepository->getUserPosts($userId);
+        return $result;
+    }
 }

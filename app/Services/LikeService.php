@@ -25,4 +25,10 @@
             $hasLiked = $this->likeRepository->hasLiked($userId, $postId);
             return $hasLiked;
         }
+
+        public function getLikesCount(int $postId): int
+        {
+            $result = $this->likeRepository->getLikesCount($postId);
+            return $result;
+        }
     }

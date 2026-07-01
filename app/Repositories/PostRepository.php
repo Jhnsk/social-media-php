@@ -22,8 +22,8 @@ class PostRepository
         return $sql->execute();
     }
 
-    public function getPosts(int $userId): array {
-
+    public function getPosts(int $userId): array 
+    {
         $sql = $this->pdo->prepare("
         SELECT 
                 posts.*,
@@ -50,6 +50,23 @@ class PostRepository
     
         $sql->bindValue(':userId', $userId);
     
+        $sql->execute();
+    
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserPosts(int $userId): array
+    {
+        $sql = $this->pdo->prepare("
+        
+            SELECT *
+            FROM posts
+            WHERE user_id = :user_id
+            ORDER BY created_at DESC
+        
+        ");
+    
+        $sql->bindValue(':user_id', $userId);
         $sql->execute();
     
         return $sql->fetchAll(PDO::FETCH_ASSOC);

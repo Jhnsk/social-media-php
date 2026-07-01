@@ -49,4 +49,10 @@
                 'email' => $user['email']
             ];
         }
+
+        public function selectUserById(int $id): array
+        {
+            $result = $this->userRepository->selectUserById($id);
+            return $result;
+        }
     }

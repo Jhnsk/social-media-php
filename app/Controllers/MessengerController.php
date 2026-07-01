@@ -14,9 +14,9 @@ class MessengerController extends Controller
 
         $userId = $_SESSION['user']['id'];
 
-        $followingModel = $this->container()->follow();
-        $userModel = $this->container()->user();
-        $messengerModel = $this->container()->messenger();
+        $followingService = $this->container()->followService();
+        $userService = $this->container()->userService();
+        $messengerService = $this->container()->messengerService();
 
         // Processa envio de mensagem
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -30,14 +30,14 @@ class MessengerController extends Controller
             );
 
             if (!$receiverId || $receiverId <= 0) {
-                $this->redirect('/socialMedia/Public/messenger','Usuário inválido');
+                $this->redirect('/socialMedia/Public/messenger');
             }
 
             if ($message === '') {
                 $this->redirect('/socialMedia/Public/messenger','Escreva uma mensagem');
             }
 
-            $messengerModel->createMsg(
+            $messengerService->createMsg(
                 $userId,
                 $receiverId,
                 $message
@@ -57,24 +57,24 @@ class MessengerController extends Controller
 
         $selectedUser = null;
 
-        $followings = $followingModel->getFollowing($userId);
+        $followings = $followingService->getFollowing($userId);
 
         foreach ($followings as &$following) {
 
-            $lastMessage = $messengerModel->getLastMessage(
+            $lastMessage = $messengerService->getLastMessage(
                 $userId,
                 $following['id']
             );
 
             $following['last_message'] =
-                $lastMessage['message'] ?? 'Nenhuma mensagem';
+            $lastMessage['message'] ?? 'Nenhuma mensagem';
         }
 
         unset($following);
 
         if ($conversationUser) {
 
-            $selectedUser = $userModel->selectUserById(
+            $selectedUser = $userService->selectUserById(
                 $conversationUser
             );
 

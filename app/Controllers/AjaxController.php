@@ -34,9 +34,9 @@
                 exit;
             }
 
-            $messengerModel = $this->container()->messenger();
+            $messengerService = $this->container()->messengerService();
 
-            $messages = $messengerModel->getMessages(
+            $messages = $messengerService->getMessages(
                 $senderId,
                 $receiverId
             );

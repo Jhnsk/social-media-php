@@ -14,11 +14,13 @@
     use App\Repositories\FollowRepository;
     use App\Repositories\LikeRepository;
     use App\Repositories\CommentRepository;
+    use App\Repositories\MessengerRepository;
     use App\Services\UserService;
     use App\Services\PostService;
     use App\Services\FollowService;
     use App\Services\LikeService;
     use App\Services\CommentService;
+    use App\Services\MessengerService;
     
 
     use PDO;
@@ -85,6 +87,16 @@
         public function commentService(): CommentService 
         {
             return new CommentService($this->commentRepository());
+        }
+
+        public function messengerRepository(): MessengerRepository  
+        {
+            return new MessengerRepository($this->pdo());
+        }
+
+        public function messengerService(): MessengerService 
+        {
+            return new MessengerService($this->messengerRepository());
         }
 
 
